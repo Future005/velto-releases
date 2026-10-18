@@ -1,0 +1,36 @@
+name: publish
+
+# Turns a DMG pushed to the "incoming" branch into a public release, then removes the branch.
+# incoming/ holds Velto.dmg, Velto.dmg.sha256, TAG (for example v0.1.0-beta.1) and NOTES.md.
+
+on:
+  push:
+    branches: [incoming]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: incoming
+
+      - name: Check the file
+        working-directory: incoming
+        run: shasum -a 256 -c Velto.dmg.sha256
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag=$(tr -d '[:space:]' < incoming/TAG)
+          gh release view "$tag" >/dev/null 2>&1 || \
+            gh release create "$tag" --target main --title "Velto $tag" --notes-file incoming/NOTES.md --latest
+          gh release upload "$tag" incoming/Velto.dmg incoming/Velto.dmg.sha256 --clobber
+
+      - name: Remove the incoming branch
+        run: git push origin --delete incoming
