@@ -10,8 +10,10 @@ Downloads only. Velto's source code is private and is not in this repository.
 
 ## First open (beta)
 
-Beta builds are not notarised yet. Open the DMG, drag Velto to Applications, then
-right-click Velto in Applications and choose **Open**. You only do this once.
+Beta builds are not notarised by Apple yet, so macOS stops the first open with
+"Apple could not verify Velto". Click Done, then open System Settings, Privacy & Security,
+scroll to Security and click **Open Anyway** next to Velto. Step by step, with a button that
+opens the right settings page: [velto.bhavishya.io/install](https://velto.bhavishya.io/install).
 
 ## Check the file
 
